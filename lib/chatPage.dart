@@ -3,24 +3,26 @@ import 'package:flutter_exercise/Widget/chatBubble.dart';
 import 'package:flutter_exercise/Widget/chatInput.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  ChatPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final username = ModalRoute.of(context)!.settings.arguments as String;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi Azim!'),
+        title: Text('Hi $username!'),
         titleTextStyle: TextStyle(color: Colors.black),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
               onPressed: () {
-                print('logout');
+                Navigator.maybePop(context);
+                print('Sign out!');
               },
               icon: const Icon(
                 Icons.logout,
-                color: Colors.black,
               ))
         ],
       ),

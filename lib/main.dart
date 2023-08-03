@@ -12,8 +12,12 @@ class ChatApp extends StatelessWidget {
     // TODO: implement build
     return MaterialApp(
       title: 'Flutter Chat App',
-      theme: ThemeData(primarySwatch: Colors.red),
-      home: const ChatPage(),
+      theme: ThemeData(
+          primarySwatch: Colors.blue,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.blue, foregroundColor: Colors.black)),
+      home: LoginPage(),
+      routes: {'/chat': (context) => ChatPage()},
     );
   }
 }

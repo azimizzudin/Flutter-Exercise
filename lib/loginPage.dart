@@ -1,37 +1,122 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final _formkey = GlobalKey<FormState>();
+
+  void signIn(context) {
+    if (_formkey.currentState != null && _formkey.currentState!.validate()) {
+      print('${usernameController.text} ${passwordController.text}');
+
+      Navigator.pushReplacementNamed(context, '/chat',
+          arguments: usernameController.text);
+
+      print('Sign in succesfully!');
+    } else {
+      print('Sign in failed!');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Let\'s sign you in!',
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5),
-            ),
-            const Text(
-              'Welcome back! \n You\'ve been missed!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.redAccent),
-            ),
-            Image.network(
-              'https://th.bing.com/th/id/R.999d85e6fdf0fde1b14688ea421e9ece?rik=kBsOAaHl%2bjEy5g&riu=http%3a%2f%2fimg1.wikia.nocookie.net%2f__cb20141129091239%2fmegamitensei%2fimages%2f4%2f40%2fPersona_3_portable_fanbook.jpg&ehk=rL%2fctwzTati0A2C%2fawUMxd%2fxIO67fUfO2trBu2BlIsw%3d&risl=&pid=ImgRaw&r=0',
-              height: 200,
-            )
-          ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Let\'s sign you in!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Welcome back! \nYou\'ve been missed!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.black),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Form(
+                key: _formkey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value != null &&
+                            value.isNotEmpty &&
+                            value.length < 5) {
+                          return 'Your username should be more than 5 character.';
+                        } else if (value != null && value.isEmpty) {
+                          return 'Please enter your username';
+                        }
+                        return null;
+                      },
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                          hintText: 'Username',
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)))),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value != null &&
+                            value.isNotEmpty &&
+                            value.length < 5) {
+                          return 'Your password should be more than 5 character.';
+                        } else if (value != null && value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                          hintText: 'Password',
+                          hintStyle: TextStyle(color: Colors.blueGrey),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)))),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    signIn(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      padding: EdgeInsets.all(15)),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(fontSize: 18),
+                  ))
+            ],
+          ),
         ),
       ),
     );
