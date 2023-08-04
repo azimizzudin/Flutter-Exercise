@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exercise/models/chatMessageEntity.dart';
 
 class ChatInput extends StatelessWidget {
-  ChatInput({Key? key}) : super(key: key);
+  final Function(ChatMessageEntity) onSubmit;
+  ChatInput({Key? key, required this.onSubmit}) : super(key: key);
 
   final messageController = TextEditingController();
 
   void onSendButtonPressed() {
     print('Chat Message: ${messageController.text}');
+
+    final newChatMessage = ChatMessageEntity(
+        text: messageController.text,
+        id: '244',
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        author: Author(username: 'poojab26'));
+
+    onSubmit(newChatMessage);
   }
 
   @override
@@ -14,7 +24,7 @@ class ChatInput extends StatelessWidget {
     return Container(
       height: 100,
       decoration: const BoxDecoration(
-          color: Colors.black,
+          color: Colors.blueAccent,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +45,7 @@ class ChatInput extends StatelessWidget {
             decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Type your message...',
-                hintStyle: TextStyle(color: Colors.white54)),
+                hintStyle: TextStyle(color: Colors.white)),
           )),
           IconButton(
               onPressed: () {

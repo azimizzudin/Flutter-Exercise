@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_exercise/chatPage.dart';
 import 'package:flutter_exercise/loginPage.dart';
+import 'package:flutter_exercise/utils/brandColor.dart';
 
 void main() {
   runApp(ChatApp());
@@ -13,7 +14,7 @@ class ChatApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Chat App',
       theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: BrandColor.primaryColor,
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.blue, foregroundColor: Colors.black)),
       home: LoginPage(),

@@ -1,9 +1,47 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_exercise/Widget/chatBubble.dart';
-import 'package:flutter_exercise/Widget/chatInput.dart';
+import 'dart:convert';
 
-class ChatPage extends StatelessWidget {
-  ChatPage({Key? key}) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_exercise/models/chatMessageEntity.dart';
+import 'package:flutter_exercise/widgets/chatBubble.dart';
+import 'package:flutter_exercise/widgets/chatInput.dart';
+
+class ChatPage extends StatefulWidget {
+  const ChatPage({Key? key}) : super(key: key);
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  List<ChatMessageEntity> _messages = [];
+
+  _loadInitialMessages() async {
+    final response = await rootBundle.loadString('assets/mock_messages.json');
+
+    final List<dynamic> decodedList = jsonDecode(response) as List;
+
+    final List<ChatMessageEntity> _chatMessages = decodedList.map((listItem) {
+      return ChatMessageEntity.fromJson(listItem);
+    }).toList();
+
+    print(_chatMessages.length);
+
+    setState(() {
+      _messages = _chatMessages;
+    });
+  }
+
+  onMessageSent(ChatMessageEntity entity) {
+    _messages.add(entity);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _loadInitialMessages();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +68,16 @@ class ChatPage extends StatelessWidget {
         children: [
           Expanded(
               child: ListView.builder(
-                  itemCount: 10,
+                  itemCount: _messages.length,
                   itemBuilder: (context, index) {
                     return ChatBubble(
-                        alignment: index % 2 == 0
-                            ? Alignment.centerLeft
-                            : Alignment.centerRight,
-                        message: 'Hallo');
+                        alignment:
+                            _messages[index].author.username == 'poojab26'
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                        entity: _messages[index]);
                   })),
-          ChatInput(),
+          ChatInput(onSubmit: onMessageSent),
         ],
       ),
     );
