@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_exercise/models/chatMessageEntity.dart';
-import 'package:flutter_exercise/widgets/chatBubble.dart';
-import 'package:flutter_exercise/widgets/chatInput.dart';
+import 'package:flutter_exercise/models/chat_message_entity.dart';
+import 'package:flutter_exercise/widgets/chat_bubble.dart';
+import 'package:flutter_exercise/widgets/chat_input.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -17,18 +17,18 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessageEntity> _messages = [];
 
   _loadInitialMessages() async {
-    final response = await rootBundle.loadString('assets/mock_messages.json');
+    rootBundle.loadString('assets/mock_messages.json').then((response) {
+      final List<dynamic> decodedList = jsonDecode(response) as List;
 
-    final List<dynamic> decodedList = jsonDecode(response) as List;
+      final List<ChatMessageEntity> chatMessages = decodedList.map((listItem) {
+        return ChatMessageEntity.fromJson(listItem);
+      }).toList();
 
-    final List<ChatMessageEntity> _chatMessages = decodedList.map((listItem) {
-      return ChatMessageEntity.fromJson(listItem);
-    }).toList();
+      debugPrint(chatMessages.length as String?);
 
-    print(_chatMessages.length);
-
-    setState(() {
-      _messages = _chatMessages;
+      setState(() {
+        _messages = chatMessages;
+      });
     });
   }
 
@@ -40,6 +40,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     _loadInitialMessages();
+
     super.initState();
   }
 
@@ -48,16 +49,17 @@ class _ChatPageState extends State<ChatPage> {
     final username = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
+      backgroundColor: Colors.white24,
       appBar: AppBar(
         title: Text('Hi $username!'),
-        titleTextStyle: TextStyle(color: Colors.black),
+        titleTextStyle: const TextStyle(color: Colors.black),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.maybePop(context);
-                print('Sign out!');
+                debugPrint('Sign out!');
               },
               icon: const Icon(
                 Icons.logout,
