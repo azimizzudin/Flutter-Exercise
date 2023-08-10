@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_exercise/models/chat_message_entity.dart';
+import 'package:flutter_exercise/services/auth_services.dart';
+import 'package:provider/provider.dart';
 
 class ChatBubble extends StatelessWidget {
   final ChatMessageEntity entity;
@@ -10,7 +12,8 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAuthor = entity.author.username == 'poojab26';
+    bool isAuthor =
+        entity.author.username == context.read<AuthServices>().getUserName();
     return Align(
       alignment: alignment,
       child: Container(
@@ -25,6 +28,7 @@ class ChatBubble extends StatelessWidget {
                 topRight: Radius.circular(12),
                 bottomLeft: Radius.circular(12))),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
@@ -38,7 +42,7 @@ class ChatBubble extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(entity.imageUrl!)),
-                      borderRadius: BorderRadius.circular(12))),
+                      borderRadius: BorderRadius.circular(24))),
           ],
         ),
       ),

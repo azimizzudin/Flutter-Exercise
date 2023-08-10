@@ -15,7 +15,7 @@ class NetworkImagePickerBody extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: const BoxDecoration(
-          color: Colors.white24,
+          color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(24), topRight: Radius.circular(24))),
       child: FutureBuilder<List<ImageModel>>(

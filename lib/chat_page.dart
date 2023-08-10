@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_exercise/models/chat_message_entity.dart';
+import 'package:flutter_exercise/services/auth_services.dart';
 import 'package:flutter_exercise/widgets/chat_bubble.dart';
 import 'package:flutter_exercise/widgets/chat_input.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class _ChatPageState extends State<ChatPage> {
         return ChatMessageEntity.fromJson(listItem);
       }).toList();
 
-      debugPrint(chatMessages.length as String?);
+      print(chatMessages.length);
 
       setState(() {
         _messages = chatMessages;
@@ -46,10 +48,10 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final username = ModalRoute.of(context)!.settings.arguments as String;
+    final username = context.watch<AuthServices>().getUserName();
 
     return Scaffold(
-      backgroundColor: Colors.white24,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Hi $username!'),
         titleTextStyle: const TextStyle(color: Colors.black),
@@ -58,7 +60,15 @@ class _ChatPageState extends State<ChatPage> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.maybePop(context);
+                context.read<AuthServices>().updateUserName('New Name');
+              },
+              icon: const Icon(
+                Icons.logout,
+              )),
+          IconButton(
+              onPressed: () {
+                context.read<AuthServices>().logoutUser();
+                Navigator.pushReplacementNamed(context, '/');
                 debugPrint('Sign out!');
               },
               icon: const Icon(
@@ -73,10 +83,10 @@ class _ChatPageState extends State<ChatPage> {
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {
                     return ChatBubble(
-                        alignment:
-                            _messages[index].author.username == 'poojab26'
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
+                        alignment: _messages[index].author.username ==
+                                context.read<AuthServices>().getUserName()
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         entity: _messages[index]);
                   })),
           ChatInput(onSubmit: onMessageSent),
